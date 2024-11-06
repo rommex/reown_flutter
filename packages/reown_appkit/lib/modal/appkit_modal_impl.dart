@@ -872,8 +872,6 @@ class ReownAppKitModal with ChangeNotifier implements IReownAppKitModal {
   @override
   Future<void> buildConnectionUri() async {
     if (!_isConnected) {
-      /// TODO Qs: How do I handle SIWE if non-EVM chains are included?
-      /// TODO Qs: How do I handle switch to Solana from EVM chain?
       try {
         if (_siweService.enabled) {
           final walletRedirect = _explorerService.getWalletRedirect(
