@@ -1,7 +1,4 @@
 import 'package:event/event.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
-import 'package:dylib/dylib.dart' as dylib;
-import 'dart:ffi' as ffi;
 
 import 'package:reown_core/relay_client/websocket/http_client.dart';
 import 'package:reown_core/relay_client/websocket/i_http_client.dart';
@@ -9,7 +6,6 @@ import 'package:reown_core/reown_core.dart';
 import 'package:reown_core/store/generic_store.dart';
 import 'package:reown_core/store/i_generic_store.dart';
 import 'package:reown_sign/reown_sign.dart';
-import 'package:reown_walletkit/generated/frb_generated.dart';
 import 'package:reown_walletkit/i_walletkit_impl.dart';
 
 class ReownWalletKit implements IReownWalletKit {
@@ -122,21 +118,7 @@ class ReownWalletKit implements IReownWalletKit {
     await reOwnSign.init();
 
     try {
-      final dylibPath = dylib.resolveDylibPath(
-        'libyttrium_dart',
-        // path: 'assets',
-      );
-      final result = ffi.DynamicLibrary.open(dylibPath);
-      print(result);
       // Locate the native library file
-      // final yttrium = ExternalLibrary.open(dylibPath);
-      // Initialize the Rust library
-      // await YttriumDart.init(externalLibrary: yttrium);
-
-      // // Create ChainAbstractionClient instance
-      // chainAbstraction = await ChainAbstractionClient.newInstance(
-      //   projectId: core.projectId,
-      // );
     } catch (e) {
       print(e);
     }
