@@ -1,4 +1,5 @@
 import 'package:event/event.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'package:reown_core/relay_client/websocket/http_client.dart';
 import 'package:reown_core/relay_client/websocket/i_http_client.dart';
@@ -6,6 +7,8 @@ import 'package:reown_core/reown_core.dart';
 import 'package:reown_core/store/generic_store.dart';
 import 'package:reown_core/store/i_generic_store.dart';
 import 'package:reown_sign/reown_sign.dart';
+import 'package:reown_walletkit/generated/frb_generated.dart';
+import 'package:reown_walletkit/generated/lib.dart';
 import 'package:reown_walletkit/i_walletkit_impl.dart';
 
 class ReownWalletKit implements IReownWalletKit {
@@ -117,11 +120,14 @@ class ReownWalletKit implements IReownWalletKit {
     await core.start();
     await reOwnSign.init();
 
-    try {
-      // Locate the native library file
-    } catch (e) {
-      print(e);
-    }
+    // Locate the native library file
+    final yttrium = ExternalLibrary.open('libyttrium_dart_universal.dylib');
+    // Initialize the Rust library
+    await YttriumDart.init(externalLibrary: yttrium);
+    // Create ChainAbstractionClient instance
+    _chainAbstraction = await ChainAbstractionClient.newInstance(
+      projectId: core.projectId,
+    );
 
     _initialized = true;
   }
@@ -140,7 +146,7 @@ class ReownWalletKit implements IReownWalletKit {
   ///---------- SIGN ENGINE ----------///
 
   @override
-  late IReownSign reOwnSign;
+  late final IReownSign reOwnSign;
 
   @override
   Event<SessionConnect> get onSessionConnect => reOwnSign.onSessionConnect;
@@ -493,6 +499,49 @@ class ReownWalletKit implements IReownWalletKit {
 
   ///---------- CHAIN ABSTRACTION ----------///
 
-  // @override
-  // late ChainAbstractionClient chainAbstraction;
+  late final ChainAbstractionClient _chainAbstraction;
+
+  // TODO shouldn't be needed
+  @override
+  String get projectId => _chainAbstraction.projectId;
+
+  // TODO shouldn't be needed
+  @override
+  bool get isDisposed => _chainAbstraction.isDisposed;
+
+  // TODO shouldn't be needed
+  @override
+  set projectId(String projectId) => _chainAbstraction.projectId = projectId;
+
+  @override
+  Future<Eip1559Estimation> estimateFees({required String chainId}) async {
+    return await _chainAbstraction.estimateFees(chainId: chainId);
+  }
+
+  @override
+  Future<RouteResponse> route({required InitTransaction transaction}) async {
+    return await _chainAbstraction.route(transaction: transaction);
+  }
+
+  @override
+  Future<StatusResponse> status({required String orchestrationId}) async {
+    return await _chainAbstraction.status(orchestrationId: orchestrationId);
+  }
+
+  @override
+  Future<StatusResponseCompleted> waitForSuccessWithTimeout({
+    required String orchestrationId,
+    required BigInt checkIn,
+    required BigInt timeout,
+  }) async {
+    return await _chainAbstraction.waitForSuccessWithTimeout(
+      orchestrationId: orchestrationId,
+      checkIn: checkIn,
+      timeout: timeout,
+    );
+  }
+
+  // TODO shouldn't be needed
+  @override
+  void dispose() => _chainAbstraction.dispose();
 }
