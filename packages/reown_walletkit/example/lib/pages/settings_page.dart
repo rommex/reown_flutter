@@ -303,13 +303,18 @@ class _EVMAccountsState extends State<_EVMAccounts> {
                           ),
                         );
                       }).toList(),
-                      onChanged: (ChainMetadata? chain) {
-                        setState(() => _selectedChain = chain);
-                        final chainKey = chainKeys[_currentPage];
-                        GetIt.I
-                            .get<EVMService>(instanceName: chain?.chainId)
-                            .getBalance(address: chainKey.address)
-                            .then((value) => setState(() => _balance = value));
+                      onChanged: (ChainMetadata? chain) async {
+                        try {
+                          setState(() => _selectedChain = chain);
+                          final chainKey = chainKeys[_currentPage];
+                          final value = await GetIt.I
+                              .get<EVMService>(instanceName: chain?.chainId)
+                              .getBalance(address: chainKey.address);
+                          setState(() => _balance = value);
+                        } catch (e) {
+                          debugPrint(e.toString());
+                          setState(() => _balance = 0.0);
+                        }
                       },
                     ),
                   ],
