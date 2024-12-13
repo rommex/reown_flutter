@@ -1,5 +1,4 @@
 import 'package:event/event.dart';
-
 import 'package:reown_core/relay_client/websocket/http_client.dart';
 import 'package:reown_core/relay_client/websocket/i_http_client.dart';
 import 'package:reown_core/reown_core.dart';
@@ -116,12 +115,6 @@ class ReownWalletKit implements IReownWalletKit {
 
     await core.start();
     await reOwnSign.init();
-
-    try {
-      // Locate the native library file
-    } catch (e) {
-      print(e);
-    }
 
     _initialized = true;
   }
@@ -490,9 +483,4 @@ class ReownWalletKit implements IReownWalletKit {
 
   @override
   IGenericStore<String> get pairingTopics => reOwnSign.pairingTopics;
-
-  ///---------- CHAIN ABSTRACTION ----------///
-
-  // @override
-  // late ChainAbstractionClient chainAbstraction;
 }
