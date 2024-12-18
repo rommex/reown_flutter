@@ -23,7 +23,7 @@ class AppsPage extends StatefulWidget with GetItStatefulWidgetMixin {
   AppsPageState createState() => AppsPageState();
 }
 
-class AppsPageState extends State<AppsPage> with GetItStateMixin {
+class AppsPageState extends State<AppsPage> with qGetItStateMixin {
   List<PairingInfo> _pairings = [];
   late IWalletKitService _walletKitService;
   late IReownWalletKit _walletKit;
@@ -76,8 +76,7 @@ class AppsPageState extends State<AppsPage> with GetItStateMixin {
     if (event != null) {
       final jsonObject = await EthUtils.decodeMessageEvent(event);
       if (!mounted) return;
-      if (jsonObject is JsonRpcRequest &&
-          jsonObject.method == MethodConstants.WC_SESSION_PING) {
+      if (jsonObject is JsonRpcRequest && jsonObject.method == MethodConstants.WC_SESSION_PING) {
         showPlatformToast(
           duration: const Duration(seconds: 1),
           child: Container(

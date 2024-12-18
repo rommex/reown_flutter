@@ -49,7 +49,7 @@ class MyHomePage extends StatefulWidget with GetItStatefulWidgetMixin {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with GetItStateMixin {
+class _MyHomePageState extends State<MyHomePage> with qGetItStateMixin {
   bool _initializing = true;
 
   List<PageData> _pageDatas = [];
@@ -115,8 +115,7 @@ class _MyHomePageState extends State<MyHomePage> with GetItStateMixin {
     walletKitService.walletKit.core.relayClient.onRelayClientConnect.subscribe(
       _setState,
     );
-    walletKitService.walletKit.core.relayClient.onRelayClientDisconnect
-        .subscribe(
+    walletKitService.walletKit.core.relayClient.onRelayClientDisconnect.subscribe(
       _setState,
     );
 
@@ -183,9 +182,7 @@ class _MyHomePageState extends State<MyHomePage> with GetItStateMixin {
           const Text('Relay '),
           CircleAvatar(
             radius: 6.0,
-            backgroundColor: walletKit.core.relayClient.isConnected
-                ? Colors.green
-                : Colors.red,
+            backgroundColor: walletKit.core.relayClient.isConnected ? Colors.green : Colors.red,
           ),
           const SizedBox(width: 16.0),
         ],
@@ -196,10 +193,7 @@ class _MyHomePageState extends State<MyHomePage> with GetItStateMixin {
           children: navRail,
         ),
       ),
-      bottomNavigationBar:
-          MediaQuery.of(context).size.width < Constants.smallScreen
-              ? _buildBottomNavBar()
-              : null,
+      bottomNavigationBar: MediaQuery.of(context).size.width < Constants.smallScreen ? _buildBottomNavBar() : null,
     );
   }
 
